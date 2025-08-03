@@ -88,5 +88,89 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    async function loadInbox() {
+        if (!currentEmail) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/inbox/${encodeURIComponent(currentEmail)}`);
+            
+            if (response.ok) {
+                const data = await response.json();
+                displayEmails(data.emails);
+            } else {
+                console.error('Failed to load inbox');
+            }
+        } catch (error) {
+            console.error('Error loading inbox:', error);
+        }
+    }
+    
+    function displayEmails(emails) {
+        if (emails.length === 0) {
+            emailList.innerHTML = `
+                <div class="empty-inbox">
+                    <i class="fas fa-inbox empty-icon"></i>
+                    <p>Your inbox is empty</p>
+                    <small>Waiting for incoming emails...</small>
+                </div>
+            `;
+        } else {
+            emailList.innerHTML = emails.map(email => `
+                <div class="email-item" onclick="viewEmail('${email.id}')">
+                    <div class="email-header">
+                        <strong class="email-from">${email.from}</strong>
+                        <span class="email-time">${formatTime(email.timestamp)}</span>
+                    </div>
+                    <div class="email-subject">${email.subject}</div>
+                    <div class="email-preview">${email.body.substring(0, 100)}...</div>
+                </div>
+            `).join('');
+        }
+    }
+    
+    async function viewEmail(emailId) {
+        try {
+            const response = await fetch(`${API_BASE}/email/${emailId}`);
+            
+            if (response.ok) {
+                const data = await response.json();
+                const email = data.email;
+                
+                document.getElementById('emailDetail').innerHTML = `
+                    <h3>${email.subject}</h3>
+                    <p><strong>From:</strong> ${email.from}</p>
+                    <p><strong>Time:</strong> ${formatTime(email.timestamp)}</p>
+                    <hr>
+                    <div class="email-body">${email.body}</div>
+                `;
+                
+                emailModal.style.display = "block";
+                loadInbox(); // Refresh inbox to show as read
+            }
+        } catch (error) {
+            console.error('Error viewing email:', error);
+        }
+    }
+    
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleString();
+    }
+    
+    // Refresh inbox button
+    refreshInboxBtn.addEventListener('click', () => {
+        loadInbox();
+    });
+    
+    // Auto-refresh inbox every 10 seconds
+    setInterval(() => {
+        if (currentEmail) {
+            loadInbox();
+        }
+    }, 10000);
+    
+    // Make viewEmail globally accessible
+    window.viewEmail = viewEmail;
+
     generateEmail();
 });
