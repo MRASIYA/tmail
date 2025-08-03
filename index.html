@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TempMail - Disposable Temporary Email</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-envelope"></i> TempMail</h1>
+            <p>Disposable Temporary Email Service</p>
+        </header>
+
+        <main>
+            <div class="email-section">
+                <h2>Your Temporary Email Address</h2>
+                <div class="email-display">
+                    <div class="email-container">
+                        <input type="text" id="tempEmail" readonly placeholder="Generating email...">
+                        <div class="email-actions">
+                            <button id="copyBtn" title="Copy Email">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button id="refreshBtn" title="Generate New Email">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button id="qrBtn" title="Show QR Code">
+                                <i class="fas fa-qrcode"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timer-display">
+                    <span id="timer">Email expires in: <strong id="countdown">10:00</strong></span>
+                </div>
+            </div>
+
+            <div class="inbox-section">
+                <div class="inbox-header">
+                    <h2><i class="fas fa-inbox"></i> Inbox</h2>
+                    <button id="refreshInbox" class="refresh-inbox-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                
+                <div class="inbox-content">
+                    <div id="emailList" class="email-list">
+                        <div class="empty-inbox">
+                            <i class="fas fa-inbox empty-icon"></i>
+                            <p>Your inbox is empty</p>
+                            <small>Waiting for incoming emails...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="info-section">
+            <h3>What is Disposable Temporary Email?</h3>
+            <p>Disposable email is a free email service that allows you to receive email at a temporary address that self-destructs after a certain time. It helps you avoid spam and keep your real mailbox clean and secure.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Secure & Anonymous</h4>
+                    <p>No registration required. Your privacy is protected.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-clock"></i>
+                    <h4>Auto-Expire</h4>
+                    <p>Emails automatically delete after 10 minutes.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-ban"></i>
+                    <h4>Spam-Free</h4>
+                    <p>Keep your real email address clean from spam.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 TempMail. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>QR Code for Email</h3>
+            <div id="qrcode"></div>
+        </div>
+    </div>
+
+    <!-- Email Detail Modal -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="emailDetail"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
