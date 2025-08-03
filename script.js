@@ -7,11 +7,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailModal = document.getElementById("emailModal");
     const closeModal = document.getElementsByClassName("close");
     const countdown = document.getElementById("countdown");
+    const emailList = document.getElementById("emailList");
+    const refreshInboxBtn = document.getElementById("refreshInbox");
+    
     let timer;
+    let currentEmail = "";
+    const API_BASE = "http://localhost:3001/api";
 
-    function generateEmail() {
-        emailInput.value = `user${Math.floor(Math.random() * 10000)}@tempmail.com`;
-        startTimer();
+    async function generateEmail() {
+        try {
+            const response = await fetch(`${API_BASE}/generate-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                currentEmail = data.email;
+                emailInput.value = currentEmail;
+                startTimer();
+                loadInbox();
+            } else {
+                // Fallback to local generation
+                currentEmail = `user${Math.floor(Math.random() * 10000)}@tempmail.dev`;
+                emailInput.value = currentEmail;
+                startTimer();
+            }
+        } catch (error) {
+            console.error('Error generating email:', error);
+            // Fallback to local generation
+            currentEmail = `user${Math.floor(Math.random() * 10000)}@tempmail.dev`;
+            emailInput.value = currentEmail;
+            startTimer();
+        }
     }
 
     function startTimer() {
